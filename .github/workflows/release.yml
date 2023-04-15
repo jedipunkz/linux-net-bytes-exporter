@@ -6,6 +6,10 @@ on:
         description: |
           Which number to increment in the semantic versioning.
           Set 'major', 'minor' or 'patch'.
+        options:
+          - major
+          - minor
+          - patch
         required: true
 
 jobs:
@@ -34,4 +38,4 @@ jobs:
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
         with:
           version: latest
-          args: release clean --config .goreleaser.yml
+          args: release --clean --config .goreleaser.yml
