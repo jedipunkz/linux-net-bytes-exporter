@@ -22,6 +22,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Bump-up Semantic Version
+        uses: kyoh86/git-vertag-action@v1.1
+        with:
+          method: "${{ github.event.inputs.method }}"
+
       - name: Set up Go
         uses: actions/setup-go@v3
 
