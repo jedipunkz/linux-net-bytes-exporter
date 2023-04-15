@@ -12,8 +12,10 @@ import (
 )
 
 type netCollector struct {
-	receivedBytes *prometheus.Desc
-	transmitBytes *prometheus.Desc
+	receivedBytes   *prometheus.Desc
+	transmitBytes   *prometheus.Desc
+	receivedPackets *prometheus.Desc
+	transmitPackets *prometheus.Desc
 }
 
 func newNetCollector() *netCollector {
@@ -26,12 +28,22 @@ func newNetCollector() *netCollector {
 			"Total number of transmitted bytes by network interface.",
 			[]string{"interface"}, nil,
 		),
+		receivedPackets: prometheus.NewDesc("net_received_packets_total",
+			"Total number of received packets by network interface.",
+			[]string{"interface"}, nil,
+		),
+		transmitPackets: prometheus.NewDesc("net_transmit_packets_total",
+			"Total number of transmitted packets by network interface.",
+			[]string{"interface"}, nil,
+		),
 	}
 }
 
 func (collector *netCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.receivedBytes
 	ch <- collector.transmitBytes
+	ch <- collector.receivedPackets
+	ch <- collector.transmitPackets
 }
 
 func (collector *netCollector) Collect(ch chan<- prometheus.Metric) {
@@ -42,13 +54,10 @@ func (collector *netCollector) Collect(ch chan<- prometheus.Metric) {
 
 	lines := strings.Split(string(data), "\n")
 	for i, line := range lines {
-		// first 2 lines are headers
 		if i < 2 {
 			continue
 		}
 
-		// if less than 10 filds, skip.
-		// because we need recivedBytes (fields[1]) and transmitBytes (fields[9])
 		fields := strings.Fields(line)
 		if len(fields) < 10 {
 			continue
@@ -57,9 +66,13 @@ func (collector *netCollector) Collect(ch chan<- prometheus.Metric) {
 		interfaceName := strings.Trim(fields[0], ":")
 		receivedBytes, _ := strconv.ParseFloat(fields[1], 64)
 		transmitBytes, _ := strconv.ParseFloat(fields[9], 64)
+		receivedPackets, _ := strconv.ParseFloat(fields[2], 64)
+		transmitPackets, _ := strconv.ParseFloat(fields[10], 64)
 
 		ch <- prometheus.MustNewConstMetric(collector.receivedBytes, prometheus.CounterValue, receivedBytes, interfaceName)
 		ch <- prometheus.MustNewConstMetric(collector.transmitBytes, prometheus.CounterValue, transmitBytes, interfaceName)
+		ch <- prometheus.MustNewConstMetric(collector.receivedPackets, prometheus.CounterValue, receivedPackets, interfaceName)
+		ch <- prometheus.MustNewConstMetric(collector.transmitPackets, prometheus.CounterValue, transmitPackets, interfaceName)
 	}
 }
 
