@@ -6,7 +6,7 @@ This is Prometheus Exporter which export linux network interfaces received/trans
 
 ## Screenshot
 
-<img src="https://raw.githubusercontent.com/jedipunkz/linux-net-bytes-exporter/main/pix/linux-net-bytes-exporter.png">
+<img src="https://raw.githubusercontent.com/jedipunkz/linux-network-exporter/main/pix/linux-net-bytes-exporter.png">
 
 ## License
 
