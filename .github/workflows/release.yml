@@ -34,4 +34,4 @@ jobs:
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
         with:
           version: latest
-          args: release --rm-dist --config .goreleaser.yml
+          args: release clean --config .goreleaser.yml
