@@ -1,4 +1,4 @@
-# Linux Net Bytes Exporter
+# Linux Network Exporter
 
 ## Description
 
