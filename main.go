@@ -42,10 +42,13 @@ func (collector *netCollector) Collect(ch chan<- prometheus.Metric) {
 
 	lines := strings.Split(string(data), "\n")
 	for i, line := range lines {
+		// first 2 lines are headers
 		if i < 2 {
 			continue
 		}
 
+		// if less than 10 filds, skip.
+		// because we need recivedBytes (fields[1]) and transmitBytes (fields[9])
 		fields := strings.Fields(line)
 		if len(fields) < 10 {
 			continue
