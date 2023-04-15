@@ -6,6 +6,7 @@ on:
         description: |
           Which number to increment in the semantic versioning.
           Set 'major', 'minor' or 'patch'.
+        type: choice
         options:
           - major
           - minor
