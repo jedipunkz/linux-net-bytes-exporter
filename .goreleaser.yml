@@ -13,18 +13,3 @@ builds:
       - arm64
     mod_timestamp: '{{ .CommitTimestamp }}'
 
-brews:
-  - tap:
-      owner: jedipunkz
-      name: homebrew-miniecs
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    commit_author:
-      name: goreleasebot
-      email: goreleaser@carlosbecker.com
-    description: "AWS ECS Login, Exec CLI"
-    homepage: "https://github.com/jedipunkz/miniecs"
-    folder: Formula
-    install: |
-      bin.install "miniecs"
-    test: |
-      system "${bin}/miniecs --help"
