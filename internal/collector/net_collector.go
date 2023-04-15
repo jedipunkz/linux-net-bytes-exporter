@@ -1,7 +1,8 @@
 package collector
 
 import (
-	"io/ioutil"
+	"io"
+	"os"
 	"strconv"
 	"strings"
 
@@ -52,12 +53,12 @@ func (collector *NetCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (collector *NetCollector) Collect(ch chan<- prometheus.Metric) {
-	data, err := ioutil.ReadFile("/proc/net/dev")
+	data, err := getNetSample()
 	if err != nil {
 		return
 	}
 
-	lines := strings.Split(string(data), "\n")
+	lines := strings.Split(data, "\n")
 
 	for i, line := range lines {
 		if i < 2 {
@@ -97,4 +98,20 @@ func (collector *NetCollector) Collect(ch chan<- prometheus.Metric) {
 		collector.lastReceivedPackets[interfaceName] = receivedPackets
 		collector.lastTransmitPackets[interfaceName] = transmitPackets
 	}
+}
+
+func getNetSample() (string, error) {
+	file, err := os.Open("/proc/net/dev")
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	var sb strings.Builder
+	_, err = io.Copy(&sb, file)
+	if err != nil {
+		return "", err
+	}
+
+	return sb.String(), nil
 }
