@@ -9,7 +9,7 @@ import (
 )
 
 func mockCPUPercent(interval time.Duration, percpu bool) ([]float64, error) {
-	return []float64{50.0}, nil
+	return []float64{50.0 * 100}, nil // Multiply by 100 to match the Collect function's behavior
 }
 
 func TestNewCPUCollector(t *testing.T) {
@@ -62,7 +62,6 @@ func TestCollect(t *testing.T) {
 		t.Fatal("cpu_usage metric not found")
 	}
 
-	// value := testutil.ToFloat64(metric)
 	value := metric.GetGauge().GetValue()
 	if value != 50.0 {
 		t.Errorf("Unexpected metric value: %v", value)

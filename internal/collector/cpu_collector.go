@@ -9,7 +9,7 @@ import (
 
 type CPUCollector struct {
 	cpuUsage   *prometheus.Desc
-	CPUPercent func(time.Duration, bool) ([]float64, error)
+	CPUPercent func(interval time.Duration, percpu bool) ([]float64, error)
 }
 
 func NewCPUCollector() *CPUCollector {
@@ -18,6 +18,7 @@ func NewCPUCollector() *CPUCollector {
 			"CPU usage percentage.",
 			nil, nil,
 		),
+		CPUPercent: cpu.Percent,
 	}
 }
 
@@ -26,9 +27,9 @@ func (collector *CPUCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (collector *CPUCollector) Collect(ch chan<- prometheus.Metric) {
-	cpuPercent, err := cpu.Percent(0, false)
+	cpuPercent, err := collector.CPUPercent(0, false)
 	if err != nil {
 		return
 	}
-	ch <- prometheus.MustNewConstMetric(collector.cpuUsage, prometheus.GaugeValue, cpuPercent[0])
+	ch <- prometheus.MustNewConstMetric(collector.cpuUsage, prometheus.GaugeValue, cpuPercent[0]/100)
 }
