@@ -53,7 +53,7 @@ func (collector *NetCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (collector *NetCollector) Collect(ch chan<- prometheus.Metric) {
-	data, err := getNetSample()
+	data, err := getNetDevice()
 	if err != nil {
 		return
 	}
@@ -100,7 +100,7 @@ func (collector *NetCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 }
 
-func getNetSample() (string, error) {
+func getNetDevice() (string, error) {
 	file, err := os.Open("/proc/net/dev")
 	if err != nil {
 		return "", err
