@@ -1,12 +1,15 @@
 package collector
 
 import (
+	"time"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/shirou/gopsutil/cpu"
 )
 
 type CPUCollector struct {
-	cpuUsage *prometheus.Desc
+	cpuUsage   *prometheus.Desc
+	CPUPercent func(time.Duration, bool) ([]float64, error)
 }
 
 func NewCPUCollector() *CPUCollector {
