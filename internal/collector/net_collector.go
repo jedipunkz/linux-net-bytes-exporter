@@ -23,19 +23,19 @@ type NetCollector struct {
 func NewNetCollector() *NetCollector {
 	return &NetCollector{
 		receivedBytesDiff: prometheus.NewDesc("net_received_bytes_diff",
-			"Difference in the number of received bytes by network interface since the last scrape.",
+			"Received bytes by network interface since the last scrape.",
 			[]string{"interface"}, nil,
 		),
 		transmitBytesDiff: prometheus.NewDesc("net_transmit_bytes_diff",
-			"Difference in the number of transmitted bytes by network interface since the last scrape.",
+			"Transmitted bytes by network interface since the last scrape.",
 			[]string{"interface"}, nil,
 		),
 		receivedPacketsDiff: prometheus.NewDesc("net_received_packets_diff",
-			"Difference in the number of received packets by network interface since the last scrape.",
+			"Received packets by network interface since the last scrape.",
 			[]string{"interface"}, nil,
 		),
 		transmitPacketsDiff: prometheus.NewDesc("net_transmit_packets_diff",
-			"Difference in the number of transmitted packets by network interface since the last scrape.",
+			"Transmitted packets by network interface since the last scrape.",
 			[]string{"interface"}, nil,
 		),
 		lastReceivedBytes:   make(map[string]float64),
@@ -53,7 +53,7 @@ func (collector *NetCollector) Describe(ch chan<- *prometheus.Desc) {
 }
 
 func (collector *NetCollector) Collect(ch chan<- prometheus.Metric) {
-	data, err := getNetSample()
+	data, err := getNetDevice()
 	if err != nil {
 		return
 	}
@@ -100,7 +100,7 @@ func (collector *NetCollector) Collect(ch chan<- prometheus.Metric) {
 	}
 }
 
-func getNetSample() (string, error) {
+func getNetDevice() (string, error) {
 	file, err := os.Open("/proc/net/dev")
 	if err != nil {
 		return "", err
