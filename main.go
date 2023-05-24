@@ -13,14 +13,17 @@ import (
 func main() {
 	registry := prometheus.NewRegistry()
 
-	nc := collector.NewNetCollector()
-	registry.MustRegister(nc)
+	netCollector := collector.NewNetCollector()
+	registry.MustRegister(netCollector)
 
 	cpuCollector := collector.NewCPUCollector()
 	registry.MustRegister(cpuCollector)
 
 	diskCollector := collector.NewDiskCollector()
 	registry.MustRegister(diskCollector)
+
+	memCollector := collector.NewMemCollector()
+	registry.MustRegister(memCollector)
 
 	http.Handle("/metrics", promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
 
