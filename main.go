@@ -25,6 +25,9 @@ func main() {
 	memCollector := collector.NewMemCollector()
 	registry.MustRegister(memCollector)
 
+	tempCollector := collector.NewTempCollector()
+	registry.MustRegister(tempCollector)
+
 	http.Handle("/metrics", promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
 
 	fmt.Println("Starting exporter on :9101")
